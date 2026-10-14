@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پانتومیم‌چی | بازی پانتومیم</title>
+<style>
+:root{--bg:#101326;--panel:#1b2040;--panel2:#242b52;--ink:#f7f7ff;--muted:#b8bedb;--accent:#a78bfa;--accent2:#67e8f9;--good:#6ee7b7;--bad:#fda4af}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#28265b 0,#101326 55%);color:var(--ink);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:980px;margin:auto;padding:24px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:clamp(24px,4vw,38px);letter-spacing:-1px}.brand span{color:var(--accent2)}.sub{color:var(--muted);margin-top:7px;font-size:14px}
+.pill{border:1px solid #454a78;border-radius:999px;padding:9px 13px;color:var(--accent2);font-size:13px}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:24px}.card{background:linear-gradient(160deg,#202548ee,#171b35f5);border:1px solid #34395f;border-radius:22px;padding:22px;box-shadow:0 18px 45px #0003}
+h2{margin:0 0 16px;font-size:20px}label{display:block;color:var(--muted);font-size:13px;margin:14px 0 7px}
+input,select{width:100%;background:#11162d;border:1px solid #41486f;border-radius:12px;color:var(--ink);padding:12px;font:inherit;outline:none}
+input:focus,select:focus{border-color:var(--accent2)}.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+button{border:0;border-radius:13px;padding:12px 16px;font:inherit;font-weight:700;cursor:pointer;transition:.15s}
+button:hover{filter:brightness(1.09);transform:translateY(-1px)}button:active{transform:translateY(0)}
+.primary{background:linear-gradient(110deg,var(--accent),#818cf8);color:#17132b}.secondary{background:#30375f;color:var(--ink);border:1px solid #4a5180}.teal{background:var(--accent2);color:#0b2030}.danger{background:#572b43;color:#ffe4e8}.full{width:100%;margin-top:12px}
+.game{min-height:390px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;background:radial-gradient(ellipse at center,#34316b,#1b2040 65%);position:relative;overflow:hidden}
+.game:before{content:"";position:absolute;width:220px;height:220px;border:1px solid #ffffff0b;border-radius:50%;top:-100px;left:-80px}
+.game>*{position:relative}.eyebrow{color:var(--accent2);font-size:13px;font-weight:bold}.word{font-size:clamp(30px,5vw,48px);font-weight:900;line-height:1.45;margin:25px 0;overflow-wrap:anywhere}.hiddenword{filter:blur(10px);user-select:none}.timer{font-size:46px;font-weight:900;font-variant-numeric:tabular-nums}.timer.low{color:var(--bad)}.hint{color:var(--muted);font-size:13px;line-height:1.8}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#11162d;border:1px solid #343a61;border-radius:14px;padding:14px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:24px;display:block;margin-top:5px}.scoreboard{display:grid;gap:10px;margin-top:12px}.team{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#11162d;border:1px solid #343a61;padding:12px;border-radius:13px}.teamname{font-weight:700}.points{display:flex;align-items:center;gap:8px}.points strong{font-size:22px;min-width:25px;text-align:center}.mini{padding:6px 10px;border-radius:9px}.foot{text-align:center;color:#858db8;font-size:12px;margin-top:22px;line-height:1.8}
+.notice{display:none;margin-top:12px;padding:12px;border-radius:12px;background:#153d3b;color:#c8fff2;font-size:13px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.game{min-height:340px}.wrap{padding:18px 12px 30px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div><div class="brand">پانتومیم<span>‌چی</span> 🎭</div><div class="sub">بازی کن، بخند، حدس بزن!</div></div>
+    <div class="pill">نسخهٔ آفلاین · بدون ثبت‌نام</div>
+  </header>
+  <main class="layout">
+    <section class="card game">
+      <div>
+        <div class="eyebrow" id="roundLabel">آماده‌ای؟</div>
+        <div class="word" id="word">🎭</div>
+        <div class="hint" id="wordHint">برای شروع، دکمهٔ «کلمهٔ بعدی» را بزن.</div>
+      </div>
+      <div>
+        <div class="timer" id="timer">01:00</div>
+        <div class="actions">
+          <button class="primary" id="revealBtn">نمایش / مخفی‌کردن کلمه</button>
+          <button class="secondary" id="timerBtn">شروع زمان‌سنج</button>
+          <button class="teal" id="nextBtn">کلمهٔ بعدی ↻</button>
+          <button class="secondary" id="resetTimerBtn">شروع دوبارهٔ زمان</button>
+        </div>
+      </div>
+    </section>
+    <aside class="card">
+      <h2>⚙️ تنظیمات بازی</h2>
+      <label for="category">دسته‌بندی کلمه‌ها</label>
+      <select id="category">
+        <option value="all">همهٔ دسته‌ها</option><option value="movies">فیلم و انیمیشن</option><option value="animals">حیوانات</option><option value="jobs">شغل‌ها</option><option value="objects">وسایل و چیزها</option><option value="actions">کارها و موقعیت‌ها</option><option value="hard">سخت و خنده‌دار</option>
+      </select>
+      <div class="row">
+        <div><label for="seconds">زمان هر دور (ثانیه)</label><input id="seconds" type="number" min="15" max="180" value="60"></div>
+        <div><label for="mode">نمایش کلمه</label><select id="mode"><option value="hidden">اول مخفی باشد</option><option value="shown">از اول نمایش بده</option></select></div>
+      </div>
+      <button class="primary full" id="startBtn">شروع دور جدید</button>
+      <div class="notice" id="notice"></div>
+      <h2 style="margin-top:25px">🏆 امتیاز تیم‌ها</h2>
+      <div class="row">
+        <div><label for="team1">تیم اول</label><input id="team1" value="تیم آبی" maxlength="24"></div>
+        <div><label for="team2">تیم دوم</label><input id="team2" value="تیم بنفش" maxlength="24"></div>
+      </div>
+      <div class="scoreboard">
+        <div class="team"><span class="teamname" id="team1Label">تیم آبی</span><div class="points"><button class="secondary mini" id="minus1">−</button><strong id="score1">0</strong><button class="primary mini" id="plus1">+</button></div></div>
+        <div class="team"><span class="teamname" id="team2Label">تیم بنفش</span><div class="points"><button class="secondary mini" id="minus2">−</button><strong id="score2">0</strong><button class="primary mini" id="plus2">+</button></div></div>
+      </div>
+      <button class="danger full" id="clearScores">صفر کردن امتیازها</button>
+    </aside>
+  </main>
+  <div class="foot">ساخته‌شده برای یک دورهمی پر از خنده ✨<br>این نسخه داخل مرورگر اجرا می‌شود و برای بازی‌کردن به اینترنت نیاز ندارد.</div>
+</div>
+<script>
+const words={
+movies:["شرک","مرد عنکبوتی","یخ‌زده","شیرشاه","هری پاتر","بتمن","مینیون‌ها","باب اسفنجی","ماتریکس","تایتانیک","سوپرمن","پاندای کونگ‌فوکار","جومانجی","تنها در خانه","کارخانه هیولاها","پینوکیو","علاءالدین","مأموریت غیرممکن","دزدان دریایی کارائیب","ماداگاسکار","راتاتویی","داستان اسباب‌بازی","آواتار","مرد آهنی"],
+animals:["گربه","کانگورو","پنگوئن","فیل","میمون","مار","طاووس","خرچنگ","لاک‌پشت","شترمرغ","خفاش","قورباغه","زرافه","دلفین","جوجه‌تیغی","خرگوش","طوطی","اسب","شیر","اختاپوس","سنجاب","کوسه","جغد","تمساح"],
+jobs:["آشپز","فضانورد","آرایشگر","آتش‌نشان","عکاس","معلم","دندان‌پزشک","رانندهٔ تاکسی","جادوگر","کارآگاه","بازیگر","کشاورز","نجار","خبرنگار","خلبان","مربی فوتبال","پستچی","پزشک","نقاش","موسیقی‌دان","پیشخدمت","ماهیگیر"],
+objects:["چتر","مسواک","جاروبرقی","عینک آفتابی","ساعت زنگ‌دار","چمدان سنگین","سشوار","دوربین","بالش","چرخ خیاطی","تلفن همراه","کنترل تلویزیون","اسکیت","دوچرخه","چتر نجات","یخچال","پنکه","گیتار","تلسکوپ","چسب نواری","دستکش بوکس","قفل","نردبان","ساعت شنی"],
+actions:["عطسه کردن","خمیازه کشیدن","روی یخ لیز خوردن","دیر رسیدن به مدرسه","دنبال اتوبوس دویدن","غذای خیلی تند خوردن","ماهیگیری","مسواک زدن","خواب ماندن","تقلید از ربات","بالا رفتن از کوه","باد کردن بادکنک","گم کردن کلید","راه رفتن روی ماه","تلاش برای باز کردن شیشه","گرفتن سلفی","رقصیدن در عروسی","ترسیدن از سوسک","بستن بند کفش","قایق‌رانی","بازی کردن پینگ‌پنگ","آشپزی کردن","وزنه بلند کردن","چتر گرفتن در باد"],
+hard:["پشه در اتاق تاریک","اینترنت قطع شده","گوشی با یک درصد شارژ","امتحان غیرمنتظره","گیر کردن زیپ لباس","وقتی کسی جوک را نفهمد","خندیدن در جای ساکت","تلاش برای بی‌صدا باز کردن چیپس","خواب دیدن پرواز می‌کنی","گرفتن عکس دسته‌جمعی","گم شدن در مرکز خرید","وقتی غذا خیلی داغ است","لگد خوردن به پایهٔ مبل","تماس تصویری با اینترنت ضعیف","دنبال عینکی گشتن که روی سرت است","وقتی اسم کسی یادت نمی‌آید","چسبیدن آدامس به کفش","رقصیدن در آسانسور","باز کردن بسته‌بندی سخت","تظاهر به فهمیدن درس"]
+};
+const $=id=>document.getElementById(id);
+let currentWord="",shown=false,remaining=60,interval=null,used=new Set(),scores=[0,0];
+function allWords(){const c=$("category").value;return c==="all"?Object.values(words).flat():words[c]}
+function formatTime(n){return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
+function updateTimer(){$("timer").textContent=formatTime(remaining);$("timer").classList.toggle("low",remaining<=10)}
+function stopTimer(){if(interval){clearInterval(interval);interval=null}$("timerBtn").textContent="شروع زمان‌سنج"}
+function resetTimer(){stopTimer();let n=parseInt($("seconds").value,10);if(!Number.isFinite(n))n=60;remaining=Math.max(15,Math.min(180,n));updateTimer()}
+function timerToggle(){if(interval){stopTimer();return}if(remaining<=0)resetTimer();$("timerBtn").textContent="توقف زمان‌سنج";interval=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){stopTimer();$("notice").style.display="block";$("notice").textContent="⏰ زمان این دور تمام شد! امتیاز تیم برنده را ثبت کن."}},1000)}
+function renderWord(){ $("word").textContent=shown?currentWord:"کلمه مخفی است 🙈";$("word").classList.toggle("hiddenword",!shown);$("wordHint").textContent=shown?"بدون حرف زدن و اشاره به حروف، اجراش کن!":"کلمه را فقط به اجراکننده نشان بده؛ بعد مخفی‌اش کن.";$("revealBtn").textContent=shown?"مخفی‌کردن کلمه":"نمایش کلمه"}
+function nextWord(){stopTimer();let pool=allWords();let available=pool.filter(w=>!used.has(w));if(!available.length){used.clear();available=pool}currentWord=available[Math.floor(Math.random()*available.length)];used.add(currentWord);shown=$("mode").value==="shown";$("roundLabel").textContent="🎭 دور جدید · "+used.size+" کلمه";$("notice").style.display="none";resetTimer();renderWord()}
+function score(i,delta){scores[i]=Math.max(0,scores[i]+delta);$("score"+(i+1)).textContent=scores[i]}
+$("revealBtn").onclick=()=>{shown=!shown;renderWord()};
+$("timerBtn").onclick=timerToggle;$("resetTimerBtn").onclick=resetTimer;$("nextBtn").onclick=nextWord;$("startBtn").onclick=nextWord;
+$("plus1").onclick=()=>score(0,1);$("minus1").onclick=()=>score(0,-1);$("plus2").onclick=()=>score(1,1);$("minus2").onclick=()=>score(1,-1);
+$("clearScores").onclick=()=>{if(confirm("امتیاز هر دو تیم صفر شود؟")){scores=[0,0];$("score1").textContent="0";$("score2").textContent="0"}};
+function teamNames(){$("team1Label").textContent=$("team1").value||"تیم اول";$("team2Label").textContent=$("team2").value||"تیم دوم"}
+$("team1").oninput=teamNames;$("team2").oninput=teamNames;$("seconds").onchange=resetTimer;
+resetTimer();teamNames();nextWord();
+</script>
+</body>
+</html>
